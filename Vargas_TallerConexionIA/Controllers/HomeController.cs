@@ -1,5 +1,6 @@
     using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Vargas_TallerConexionIA.Interfaces;
 using Vargas_TallerConexionIA.Models;
 using Vargas_TallerConexionIA.Repositories;
 
@@ -7,17 +8,16 @@ namespace Vargas_TallerConexionIA.Controllers;
 
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
+    private IChatbotService _chatbotService;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController()
     {
-        _logger = logger;
+        _chatbotService = new GeminiRepository();
     }
 
     public async Task<IActionResult> Index()
     {
-        GeminiRepository repo = new GeminiRepository();
-        string response = await repo.GetChatbotResponseAsync("Dame un resumen de 100 palabras de la pelicula spiderman no way home");
+        string response = await _chatbotService.GetChatbotResponseAsync("Dame un resumen de 100 palabras de la pelicula spiderman no way home");
         ViewBag.chatbotAnswer = response;
         return View();
     }
